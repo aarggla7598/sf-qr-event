@@ -14,6 +14,20 @@
 
   <!-- Event Info -->
   <lightning-card title={event.Name} icon-name="utility:event">
+    <lightning-button
+      slot="actions"
+      label="Edit"
+      icon-name="utility:edit"
+      onclick={handleEditEvent}
+    ></lightning-button>
+    <lightning-button
+      slot="actions"
+      label="Delete"
+      icon-name="utility:delete"
+      variant="destructive"
+      onclick={handleDeleteEvent}
+      class="slds-m-left_x-small"
+    ></lightning-button>
     <div class="slds-p-horizontal_medium slds-p-bottom_medium">
       <div class="slds-grid slds-wrap slds-gutters_small">
         <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
@@ -48,6 +62,13 @@
     <lightning-card title="Attendees" icon-name="utility:people">
       <lightning-button
         slot="actions"
+        label="Export"
+        icon-name="utility:download"
+        onclick={handleExportAttendees}
+        class="slds-m-right_x-small"
+      ></lightning-button>
+      <lightning-button
+        slot="actions"
         label="Add Attendee"
         icon-name="utility:add"
         variant="brand"
@@ -76,6 +97,7 @@
               icon-name="utility:scan"
               variant={checkInModeVariant}
               onclick={handleToggleCheckInMode}
+              disabled={disableCheckIn}
             ></lightning-button>
           </div>
         </div>
@@ -83,23 +105,40 @@
         <!-- QR Check-in Scanner -->
         <template lwc:if={checkInMode}>
           <div class="slds-box slds-m-bottom_small scan-box">
-            <div class="slds-grid slds-grid_vertical-align-end">
-              <div class="slds-col slds-grow">
-                <lightning-input
-                  label="Scan or Enter QR Code"
-                  value={scannedCode}
-                  onchange={handleScannedCodeChange}
-                  placeholder="Enter QR code..."
-                ></lightning-input>
-              </div>
-              <div class="slds-col slds-m-left_x-small">
-                <lightning-button
-                  label="Check In"
-                  variant="brand"
-                  onclick={handleScanCheckIn}
-                ></lightning-button>
-              </div>
+            <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+              <span class="slds-text-title_bold">QR Check-In</span>
+              <lightning-button
+                label={cameraScannerLabel}
+                icon-name="utility:video"
+                variant="neutral"
+                onclick={handleToggleCameraScanner}
+              ></lightning-button>
             </div>
+            <template lwc:if={showCameraScanner}>
+              <c-qr-camera-scanner
+                active
+                onscan={handleCameraScan}
+              ></c-qr-camera-scanner>
+            </template>
+            <template lwc:if={showTextInput}>
+              <div class="slds-grid slds-grid_vertical-align-end">
+                <div class="slds-col slds-grow">
+                  <lightning-input
+                    label="Scan or Enter QR Code"
+                    value={scannedCode}
+                    onchange={handleScannedCodeChange}
+                    placeholder="Enter QR code..."
+                  ></lightning-input>
+                </div>
+                <div class="slds-col slds-m-left_x-small">
+                  <lightning-button
+                    label="Check In"
+                    variant="brand"
+                    onclick={handleScanCheckIn}
+                  ></lightning-button>
+                </div>
+              </div>
+            </template>
           </div>
         </template>
 
@@ -125,6 +164,7 @@
                 <c-attendee-card
                   attendee={attendee}
                   show-q-r={showQR}
+                  disable-check-in={disableCheckIn}
                   ontogglecheckin={handleToggleCheckIn}
                   onedit={handleEditAttendee}
                   ondelete={handleDeleteAttendee}

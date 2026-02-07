@@ -1,0 +1,47 @@
+<template>
+  <div class="scanner-container">
+    <template lwc:if={errorMessage}>
+      <div class="slds-box slds-theme_shade slds-text-align_center error-box">
+        <lightning-icon
+          icon-name="utility:warning"
+          size="small"
+          class="slds-m-right_x-small"
+        ></lightning-icon>
+        <span>{errorMessage}</span>
+      </div>
+    </template>
+
+    <template lwc:if={isCameraActive}>
+      <div class="video-wrapper">
+        <video
+          lwc:ref="video"
+          autoplay
+          playsinline
+          muted
+          class="scanner-video"
+        ></video>
+        <canvas lwc:ref="canvas" class="scanner-canvas"></canvas>
+        <template lwc:if={isScanning}>
+          <div class="scan-overlay">
+            <div class="scan-frame"></div>
+          </div>
+        </template>
+      </div>
+      <p
+        class="slds-text-align_center slds-text-body_small slds-m-top_x-small scanner-hint"
+      >
+        <template lwc:if={isInitializing}>Starting camera...</template>
+        <template lwc:if={isScanning}>Point camera at QR code</template>
+      </p>
+    </template>
+
+    <template lwc:if={showSpinner}>
+      <div class="slds-align_absolute-center slds-p-around_medium">
+        <lightning-spinner
+          alternative-text="Starting camera..."
+          size="medium"
+        ></lightning-spinner>
+      </div>
+    </template>
+  </div>
+</template>

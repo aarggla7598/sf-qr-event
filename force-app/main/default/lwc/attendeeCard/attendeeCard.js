@@ -3,6 +3,11 @@ import { LightningElement, api } from "lwc";
 export default class AttendeeCard extends LightningElement {
   @api attendee;
   @api showQR = false;
+  @api disableCheckIn = false;
+
+  get isCheckInDisabled() {
+    return this.disableCheckIn;
+  }
 
   get checkInStatusLabel() {
     return this.attendee?.Checked_In__c ? "Checked In" : "Not Checked In";

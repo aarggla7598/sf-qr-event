@@ -5,6 +5,7 @@ import getAttendeesByEvent from "@salesforce/apex/AttendeeController.getAttendee
 import toggleCheckIn from "@salesforce/apex/AttendeeController.toggleCheckIn";
 import checkInByQRCode from "@salesforce/apex/AttendeeController.checkInByQRCode";
 import deleteAttendee from "@salesforce/apex/AttendeeController.deleteAttendee";
+import deleteEvent from "@salesforce/apex/EventController.deleteEvent";
 import AttendeeFormModal from "c/attendeeFormModal";
 
 export default class EventDetail extends LightningElement {
@@ -14,6 +15,7 @@ export default class EventDetail extends LightningElement {
   showQR = false;
   checkInMode = false;
   scannedCode = "";
+  useCameraScanner = false;
 
   _wiredAttendeesResult;
   attendees = [];
@@ -52,7 +54,7 @@ export default class EventDetail extends LightningElement {
     return this.attendees.filter(
       (a) =>
         a.Name.toLowerCase().includes(term) ||
-        a.Email__c.toLowerCase().includes(term)
+        (a.Email__c || "").toLowerCase().includes(term)
     );
   }
 
@@ -81,6 +83,31 @@ export default class EventDetail extends LightningElement {
     return this.checkInMode ? "brand" : "neutral";
   }
 
+  get isEventActive() {
+    const status = this.event?.Status__c || "Active";
+    return status === "Active" || status === "Draft";
+  }
+
+  get disableCheckIn() {
+    return !this.isEventActive;
+  }
+
+  get cameraScannerLabel() {
+    return this.useCameraScanner ? "Use Text Input" : "Use Camera";
+  }
+
+  get showTextInput() {
+    return !this.useCameraScanner;
+  }
+
+  get showCameraScanner() {
+    return this.useCameraScanner;
+  }
+
+  get hasFilteredAttendees() {
+    return this.filteredAttendees && this.filteredAttendees.length > 0;
+  }
+
   handleBack() {
     this.dispatchEvent(new CustomEvent("back"));
   }
@@ -96,10 +123,20 @@ export default class EventDetail extends LightningElement {
   handleToggleCheckInMode() {
     this.checkInMode = !this.checkInMode;
     this.scannedCode = "";
+    this.useCameraScanner = false;
+  }
+
+  handleToggleCameraScanner() {
+    this.useCameraScanner = !this.useCameraScanner;
   }
 
   handleScannedCodeChange(event) {
     this.scannedCode = event.target.value;
+  }
+
+  handleCameraScan(event) {
+    this.scannedCode = event.detail;
+    this.handleScanCheckIn();
   }
 
   async handleScanCheckIn() {
@@ -186,6 +223,82 @@ export default class EventDetail extends LightningElement {
     } catch (error) {
       this.showToast("Error", error.body?.message || "Delete failed", "error");
     }
+  }
+
+  handleEditEvent() {
+    this.dispatchEvent(new CustomEvent("editevent", { detail: this.event }));
+  }
+
+  async handleDeleteEvent() {
+    try {
+      await deleteEvent({ eventId: this.eventId });
+      this.showToast("Success", "Event deleted successfully", "success");
+      this.dispatchEvent(new CustomEvent("deleteevent"));
+    } catch (error) {
+      this.showToast(
+        "Error",
+        error.body?.message || "Failed to delete event",
+        "error"
+      );
+    }
+  }
+
+  handleExportAttendees() {
+    const attendeesToExport = this.filteredAttendees;
+    if (!attendeesToExport || attendeesToExport.length === 0) {
+      this.showToast("Info", "No attendees to export.", "info");
+      return;
+    }
+
+    const headers = ["Name", "Email", "QR Code", "Checked In", "Check-In Time"];
+    const rows = attendeesToExport.map((a) => [
+      this._escapeCsvField(a.Name),
+      this._escapeCsvField(a.Email__c),
+      this._escapeCsvField(a.QR_Code__c),
+      a.Checked_In__c ? "Yes" : "No",
+      a.Check_In_Time__c
+        ? this._escapeCsvField(new Date(a.Check_In_Time__c).toLocaleString())
+        : ""
+    ]);
+
+    const csvContent =
+      "\uFEFF" +
+      headers.join(",") +
+      "\n" +
+      rows.map((r) => r.join(",")).join("\n");
+
+    const eventName = (this.event?.Name || "Event").replace(
+      /[^a-zA-Z0-9]/g,
+      "_"
+    );
+    const today = new Date().toISOString().slice(0, 10);
+    const filename = eventName + "_attendees_" + today + ".csv";
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    this.showToast(
+      "Success",
+      "Exported " + attendeesToExport.length + " attendees.",
+      "success"
+    );
+  }
+
+  _escapeCsvField(value) {
+    if (value == null) return "";
+    const str = String(value);
+    if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+      return '"' + str.replace(/"/g, '""') + '"';
+    }
+    return str;
   }
 
   showToast(title, message, variant) {

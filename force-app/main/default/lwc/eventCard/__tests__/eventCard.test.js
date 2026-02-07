@@ -46,8 +46,9 @@ describe("c-event-card", () => {
   it("displays attendee count badge", () => {
     const element = createComponent(mockEvent);
     return Promise.resolve().then(() => {
-      const badge = element.shadowRoot.querySelector("lightning-badge");
-      expect(badge.label).toBe("2 Attendees");
+      const badges = element.shadowRoot.querySelectorAll("lightning-badge");
+      expect(badges[0].label).toBe("Active");
+      expect(badges[1].label).toBe("2 Attendees");
     });
   });
 
@@ -55,8 +56,8 @@ describe("c-event-card", () => {
     const singleAttendeeEvent = { ...mockEvent, Attendees__r: [{ Id: "a01" }] };
     const element = createComponent(singleAttendeeEvent);
     return Promise.resolve().then(() => {
-      const badge = element.shadowRoot.querySelector("lightning-badge");
-      expect(badge.label).toBe("1 Attendee");
+      const badges = element.shadowRoot.querySelectorAll("lightning-badge");
+      expect(badges[1].label).toBe("1 Attendee");
     });
   });
 

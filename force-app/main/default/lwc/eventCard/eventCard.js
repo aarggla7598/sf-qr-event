@@ -18,6 +18,15 @@ export default class EventCard extends LightningElement {
     return count + (count === 1 ? " Attendee" : " Attendees");
   }
 
+  get statusLabel() {
+    return this.event?.Status__c || "Active";
+  }
+
+  get statusBadgeClass() {
+    const status = (this.event?.Status__c || "Active").toLowerCase();
+    return "status-badge status-" + status;
+  }
+
   handleClick() {
     this.dispatchEvent(new CustomEvent("select", { detail: this.event.Id }));
   }

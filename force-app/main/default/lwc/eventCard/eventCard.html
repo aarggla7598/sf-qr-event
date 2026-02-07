@@ -26,7 +26,14 @@
         </p>
       </template>
       <div class="slds-m-top_x-small">
-        <lightning-badge label={attendeeCountLabel}></lightning-badge>
+        <lightning-badge
+          label={statusLabel}
+          class={statusBadgeClass}
+        ></lightning-badge>
+        <lightning-badge
+          label={attendeeCountLabel}
+          class="slds-m-left_xx-small"
+        ></lightning-badge>
       </div>
     </div>
   </lightning-card>

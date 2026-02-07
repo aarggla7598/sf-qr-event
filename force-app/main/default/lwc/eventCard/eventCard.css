@@ -14,3 +14,28 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.status-badge {
+  --sds-c-badge-color-background: #ecebea;
+  --sds-c-badge-text-color: #514f4d;
+}
+
+.status-active {
+  --sds-c-badge-color-background: #2e844a;
+  --sds-c-badge-text-color: #fff;
+}
+
+.status-draft {
+  --sds-c-badge-color-background: #706e6b;
+  --sds-c-badge-text-color: #fff;
+}
+
+.status-completed {
+  --sds-c-badge-color-background: #0176d3;
+  --sds-c-badge-text-color: #fff;
+}
+
+.status-cancelled {
+  --sds-c-badge-color-background: #ba0517;
+  --sds-c-badge-text-color: #fff;
+}

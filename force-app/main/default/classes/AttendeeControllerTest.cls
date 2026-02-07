@@ -230,4 +230,79 @@ private class AttendeeControllerTest {
     System.assertEquals(null, toggledBack.Check_In_Time__c);
     Test.stopTest();
   }
+
+  @IsTest
+  static void testCheckInByQRCodeCompletedEvent() {
+    Event__c evt = getEvent();
+    Attendee__c att = AttendeeController.addAttendee(
+      evt.Id,
+      'Alice Johnson',
+      'alice@example.com'
+    );
+    // Mark event as Completed
+    evt.Status__c = 'Completed';
+    update evt;
+
+    Test.startTest();
+    try {
+      AttendeeController.checkInByQRCode(evt.Id, att.QR_Code__c);
+      System.assert(false, 'Should have thrown exception for completed event');
+    } catch (AuraHandledException e) {
+      System.assert(
+        e.getMessage().contains('not available'),
+        'Error should mention check-in not available'
+      );
+    }
+    Test.stopTest();
+  }
+
+  @IsTest
+  static void testCheckInByQRCodeCancelledEvent() {
+    Event__c evt = getEvent();
+    Attendee__c att = AttendeeController.addAttendee(
+      evt.Id,
+      'Bob Smith',
+      'bob@example.com'
+    );
+    // Mark event as Cancelled
+    evt.Status__c = 'Cancelled';
+    update evt;
+
+    Test.startTest();
+    try {
+      AttendeeController.checkInByQRCode(evt.Id, att.QR_Code__c);
+      System.assert(false, 'Should have thrown exception for cancelled event');
+    } catch (AuraHandledException e) {
+      System.assert(
+        e.getMessage().contains('not available'),
+        'Error should mention check-in not available'
+      );
+    }
+    Test.stopTest();
+  }
+
+  @IsTest
+  static void testToggleCheckInCompletedEvent() {
+    Event__c evt = getEvent();
+    Attendee__c att = AttendeeController.addAttendee(
+      evt.Id,
+      'Carol White',
+      'carol@example.com'
+    );
+    // Mark event as Completed
+    evt.Status__c = 'Completed';
+    update evt;
+
+    Test.startTest();
+    try {
+      AttendeeController.toggleCheckIn(att.Id);
+      System.assert(false, 'Should have thrown exception for completed event');
+    } catch (AuraHandledException e) {
+      System.assert(
+        e.getMessage().contains('not available'),
+        'Error should mention check-in not available'
+      );
+    }
+    Test.stopTest();
+  }
 }

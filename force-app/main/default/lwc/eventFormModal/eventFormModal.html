@@ -1,5 +1,5 @@
 <template>
-  <lightning-modal-header label="Create New Event"></lightning-modal-header>
+  <lightning-modal-header label={modalTitle}></lightning-modal-header>
   <lightning-modal-body>
     <div class="slds-p-around_medium">
       <lightning-input
@@ -30,6 +30,15 @@
         onchange={handleDescriptionChange}
         class="slds-m-bottom_small"
       ></lightning-textarea>
+      <template lwc:if={isEditMode}>
+        <lightning-combobox
+          label="Status"
+          value={status}
+          options={statusOptions}
+          onchange={handleStatusChange}
+          class="slds-m-bottom_small"
+        ></lightning-combobox>
+      </template>
     </div>
   </lightning-modal-body>
   <lightning-modal-footer>
@@ -41,8 +50,8 @@
       ></lightning-button>
       <lightning-button
         variant="brand"
-        label="Create Event"
-        onclick={handleCreate}
+        label={submitLabel}
+        onclick={handleSubmit}
       ></lightning-button>
     </div>
   </lightning-modal-footer>

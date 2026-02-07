@@ -14,12 +14,22 @@
           Event Management
         </h1>
         <template lwc:if={isListView}>
-          <lightning-button
-            variant="brand"
-            label="New Event"
-            icon-name="utility:add"
-            onclick={handleNewEvent}
-          ></lightning-button>
+          <div class="slds-grid slds-grid_vertical-align-center">
+            <lightning-combobox
+              label="Status"
+              value={statusFilter}
+              options={statusFilterOptions}
+              onchange={handleStatusFilterChange}
+              variant="label-hidden"
+              class="slds-m-right_small"
+            ></lightning-combobox>
+            <lightning-button
+              variant="brand"
+              label="New Event"
+              icon-name="utility:add"
+              onclick={handleNewEvent}
+            ></lightning-button>
+          </div>
         </template>
       </div>
 
@@ -32,7 +42,7 @@
         </template>
         <template lwc:else>
           <c-event-list
-            events={events}
+            events={filteredEvents}
             onselectevent={handleSelectEvent}
           ></c-event-list>
         </template>
@@ -43,6 +53,8 @@
         <c-event-detail
           event={selectedEvent}
           onback={handleBackToList}
+          oneditevent={handleEditEvent}
+          ondeleteevent={handleDeleteEvent}
         ></c-event-detail>
       </template>
     </div>

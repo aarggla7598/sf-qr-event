@@ -201,6 +201,27 @@ public with sharing class AttendeeController {
 
   @AuraEnabled
   public static Attendee__c checkInByQRCode(Id eventId, String qrCode) {
+    Event__c evt = [
+      SELECT Id, Status__c
+      FROM Event__c
+      WHERE Id = :eventId
+      LIMIT 1
+    ];
+    String eventStatus = evt.Status__c != null ? evt.Status__c : 'Active';
+    if (eventStatus == 'Completed' || eventStatus == 'Cancelled') {
+      AuraHandledException ex = new AuraHandledException(
+        'Check-in is not available for ' +
+          eventStatus.toLowerCase() +
+          ' events.'
+      );
+      ex.setMessage(
+        'Check-in is not available for ' +
+          eventStatus.toLowerCase() +
+          ' events.'
+      );
+      throw ex;
+    }
+
     List<Attendee__c> attendees = [
       SELECT Id, Name, Email__c, QR_Code__c, Checked_In__c, Check_In_Time__c
       FROM Attendee__c
@@ -233,11 +254,27 @@ public with sharing class AttendeeController {
   @AuraEnabled
   public static Attendee__c toggleCheckIn(Id attendeeId) {
     Attendee__c att = [
-      SELECT Id, Name, Checked_In__c, Check_In_Time__c
+      SELECT Id, Name, Checked_In__c, Check_In_Time__c, Event__r.Status__c
       FROM Attendee__c
       WHERE Id = :attendeeId
       LIMIT 1
     ];
+    String eventStatus = att.Event__r.Status__c != null
+      ? att.Event__r.Status__c
+      : 'Active';
+    if (eventStatus == 'Completed' || eventStatus == 'Cancelled') {
+      AuraHandledException ex = new AuraHandledException(
+        'Check-in is not available for ' +
+          eventStatus.toLowerCase() +
+          ' events.'
+      );
+      ex.setMessage(
+        'Check-in is not available for ' +
+          eventStatus.toLowerCase() +
+          ' events.'
+      );
+      throw ex;
+    }
 
     att.Checked_In__c = !att.Checked_In__c;
     att.Check_In_Time__c = att.Checked_In__c ? DateTime.now() : null;
