@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Email_Format_Check</fullName>
+    <active>true</active>
+    <description
+  >Validates that the Email field contains a properly formatted email address.</description>
+    <errorConditionFormula>AND(
+    NOT(ISBLANK(Email__c)),
+    NOT(REGEX(Email__c, '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'))
+)</errorConditionFormula>
+    <errorDisplayField>Email__c</errorDisplayField>
+    <errorMessage>Please enter a valid email address.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,37 @@
+<template>
+  <lightning-modal-header label={modalTitle}></lightning-modal-header>
+  <lightning-modal-body>
+    <div class="slds-p-around_medium">
+      <lightning-input
+        label="Name"
+        value={name}
+        onchange={handleNameChange}
+        required
+        class="slds-m-bottom_small"
+      ></lightning-input>
+      <lightning-input
+        type="email"
+        label="Email"
+        value={email}
+        onchange={handleEmailChange}
+        required
+        message-when-pattern-mismatch="Please enter a valid email address"
+        class="slds-m-bottom_small"
+      ></lightning-input>
+    </div>
+  </lightning-modal-body>
+  <lightning-modal-footer>
+    <div class="slds-grid slds-grid_align-end">
+      <lightning-button
+        label="Cancel"
+        onclick={handleCancel}
+        class="slds-m-right_x-small"
+      ></lightning-button>
+      <lightning-button
+        variant="brand"
+        label={submitLabel}
+        onclick={handleSubmit}
+      ></lightning-button>
+    </div>
+  </lightning-modal-footer>
+</template>

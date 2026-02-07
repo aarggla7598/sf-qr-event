@@ -1,0 +1,13 @@
+.checked-in-badge {
+  --sds-c-badge-color-background: #2e844a;
+  --sds-c-badge-text-color: white;
+}
+
+.not-checked-in-badge {
+  --sds-c-badge-color-background: #706e6b;
+  --sds-c-badge-text-color: white;
+}
+
+.check-in-time {
+  color: #706e6b;
+}

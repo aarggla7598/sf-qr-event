@@ -1,0 +1,50 @@
+<template>
+  <lightning-card>
+    <div class="slds-p-around_medium">
+      <!-- Header -->
+      <div
+        class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-m-bottom_medium"
+      >
+        <h1 class="slds-text-heading_large">
+          <lightning-icon
+            icon-name="utility:event"
+            size="medium"
+            class="slds-m-right_x-small"
+          ></lightning-icon>
+          Event Management
+        </h1>
+        <template lwc:if={isListView}>
+          <lightning-button
+            variant="brand"
+            label="New Event"
+            icon-name="utility:add"
+            onclick={handleNewEvent}
+          ></lightning-button>
+        </template>
+      </div>
+
+      <!-- List View -->
+      <template lwc:if={isListView}>
+        <template lwc:if={isLoading}>
+          <lightning-spinner
+            alternative-text="Loading events..."
+          ></lightning-spinner>
+        </template>
+        <template lwc:else>
+          <c-event-list
+            events={events}
+            onselectevent={handleSelectEvent}
+          ></c-event-list>
+        </template>
+      </template>
+
+      <!-- Detail View -->
+      <template lwc:if={isDetailView}>
+        <c-event-detail
+          event={selectedEvent}
+          onback={handleBackToList}
+        ></c-event-detail>
+      </template>
+    </div>
+  </lightning-card>
+</template>

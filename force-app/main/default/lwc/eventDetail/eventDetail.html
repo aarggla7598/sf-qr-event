@@ -1,0 +1,153 @@
+<template>
+  <!-- Header -->
+  <div
+    class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-m-bottom_medium"
+  >
+    <div class="slds-col">
+      <lightning-button
+        label="Back to Events"
+        icon-name="utility:back"
+        onclick={handleBack}
+      ></lightning-button>
+    </div>
+  </div>
+
+  <!-- Event Info -->
+  <lightning-card title={event.Name} icon-name="utility:event">
+    <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+      <div class="slds-grid slds-wrap slds-gutters_small">
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+          <div class="slds-m-bottom_x-small">
+            <lightning-icon
+              icon-name="utility:event"
+              size="xx-small"
+              class="slds-m-right_xx-small"
+            ></lightning-icon>
+            <span class="slds-text-body_regular">{formattedDate}</span>
+          </div>
+          <div class="slds-m-bottom_x-small">
+            <lightning-icon
+              icon-name="utility:location"
+              size="xx-small"
+              class="slds-m-right_xx-small"
+            ></lightning-icon>
+            <span class="slds-text-body_regular">{event.Location__c}</span>
+          </div>
+        </div>
+        <template lwc:if={event.Description__c}>
+          <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <p class="slds-text-body_regular">{event.Description__c}</p>
+          </div>
+        </template>
+      </div>
+    </div>
+  </lightning-card>
+
+  <!-- Attendee Management -->
+  <div class="slds-m-top_medium">
+    <lightning-card title="Attendees" icon-name="utility:people">
+      <lightning-button
+        slot="actions"
+        label="Add Attendee"
+        icon-name="utility:add"
+        variant="brand"
+        onclick={handleAddAttendee}
+      ></lightning-button>
+
+      <div class="slds-p-horizontal_medium">
+        <!-- Stats Bar -->
+        <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+          <div>
+            <lightning-badge label={totalCountLabel}></lightning-badge>
+            <lightning-badge
+              label={checkedInCountLabel}
+              class="slds-m-left_xx-small checked-in-badge"
+            ></lightning-badge>
+          </div>
+          <div class="slds-grid slds-grid_vertical-align-center">
+            <lightning-button-icon
+              icon-name={qrToggleIcon}
+              alternative-text="Toggle QR Codes"
+              onclick={handleToggleQR}
+              class="slds-m-right_x-small"
+            ></lightning-button-icon>
+            <lightning-button
+              label={checkInModeLabel}
+              icon-name="utility:scan"
+              variant={checkInModeVariant}
+              onclick={handleToggleCheckInMode}
+            ></lightning-button>
+          </div>
+        </div>
+
+        <!-- QR Check-in Scanner -->
+        <template lwc:if={checkInMode}>
+          <div class="slds-box slds-m-bottom_small scan-box">
+            <div class="slds-grid slds-grid_vertical-align-end">
+              <div class="slds-col slds-grow">
+                <lightning-input
+                  label="Scan or Enter QR Code"
+                  value={scannedCode}
+                  onchange={handleScannedCodeChange}
+                  placeholder="Enter QR code..."
+                ></lightning-input>
+              </div>
+              <div class="slds-col slds-m-left_x-small">
+                <lightning-button
+                  label="Check In"
+                  variant="brand"
+                  onclick={handleScanCheckIn}
+                ></lightning-button>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- Search -->
+        <div class="slds-m-bottom_small">
+          <lightning-input
+            type="search"
+            label="Search Attendees"
+            placeholder="Search by name or email..."
+            value={searchTerm}
+            onchange={handleSearchChange}
+          ></lightning-input>
+        </div>
+
+        <!-- Attendee List -->
+        <template lwc:if={hasAttendees}>
+          <div class="slds-grid slds-wrap slds-gutters_small">
+            <template for:each={filteredAttendees} for:item="attendee">
+              <div
+                key={attendee.Id}
+                class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small"
+              >
+                <c-attendee-card
+                  attendee={attendee}
+                  show-q-r={showQR}
+                  ontogglecheckin={handleToggleCheckIn}
+                  onedit={handleEditAttendee}
+                  ondelete={handleDeleteAttendee}
+                ></c-attendee-card>
+              </div>
+            </template>
+          </div>
+          <template lwc:if={noSearchResults}>
+            <div class="slds-align_absolute-center slds-p-around_medium">
+              <p class="slds-text-body_regular">
+                No attendees match your search.
+              </p>
+            </div>
+          </template>
+        </template>
+        <template lwc:else>
+          <div class="slds-align_absolute-center slds-p-around_large">
+            <p class="slds-text-body_regular">
+              No attendees yet. Add your first attendee.
+            </p>
+          </div>
+        </template>
+      </div>
+    </lightning-card>
+  </div>
+</template>

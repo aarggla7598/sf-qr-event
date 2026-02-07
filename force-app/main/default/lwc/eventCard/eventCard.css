@@ -1,0 +1,16 @@
+.card-content {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.card-content:hover {
+  background-color: #f3f3f3;
+}
+
+.description-text {
+  color: #706e6b;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

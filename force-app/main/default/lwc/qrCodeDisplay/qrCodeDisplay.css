@@ -1,0 +1,21 @@
+.qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.qr-canvas {
+  background: white;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.qr-value {
+  font-family: monospace;
+  color: #706e6b;
+  word-break: break-all;
+  text-align: center;
+  max-width: 200px;
+}

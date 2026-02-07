@@ -1,0 +1,33 @@
+<template>
+  <lightning-card>
+    <div class="slds-p-around_medium card-content" onclick={handleClick}>
+      <h2 class="slds-text-heading_small slds-m-bottom_x-small">
+        {event.Name}
+      </h2>
+      <div class="slds-m-bottom_xx-small slds-text-body_small">
+        <lightning-icon
+          icon-name="utility:event"
+          size="xx-small"
+          class="slds-m-right_xx-small"
+        ></lightning-icon>
+        <span>{formattedDate}</span>
+      </div>
+      <div class="slds-m-bottom_x-small slds-text-body_small">
+        <lightning-icon
+          icon-name="utility:location"
+          size="xx-small"
+          class="slds-m-right_xx-small"
+        ></lightning-icon>
+        <span>{event.Location__c}</span>
+      </div>
+      <template lwc:if={event.Description__c}>
+        <p class="slds-text-body_regular slds-m-top_x-small description-text">
+          {event.Description__c}
+        </p>
+      </template>
+      <div class="slds-m-top_x-small">
+        <lightning-badge label={attendeeCountLabel}></lightning-badge>
+      </div>
+    </div>
+  </lightning-card>
+</template>

@@ -1,0 +1,49 @@
+<template>
+  <lightning-modal-header label="Create New Event"></lightning-modal-header>
+  <lightning-modal-body>
+    <div class="slds-p-around_medium">
+      <lightning-input
+        label="Event Name"
+        value={name}
+        onchange={handleNameChange}
+        required
+        class="slds-m-bottom_small"
+      ></lightning-input>
+      <lightning-input
+        type="date"
+        label="Date"
+        value={eventDate}
+        onchange={handleDateChange}
+        required
+        class="slds-m-bottom_small"
+      ></lightning-input>
+      <lightning-input
+        label="Location"
+        value={location}
+        onchange={handleLocationChange}
+        required
+        class="slds-m-bottom_small"
+      ></lightning-input>
+      <lightning-textarea
+        label="Description"
+        value={description}
+        onchange={handleDescriptionChange}
+        class="slds-m-bottom_small"
+      ></lightning-textarea>
+    </div>
+  </lightning-modal-body>
+  <lightning-modal-footer>
+    <div class="slds-grid slds-grid_align-end">
+      <lightning-button
+        label="Cancel"
+        onclick={handleCancel}
+        class="slds-m-right_x-small"
+      ></lightning-button>
+      <lightning-button
+        variant="brand"
+        label="Create Event"
+        onclick={handleCreate}
+      ></lightning-button>
+    </div>
+  </lightning-modal-footer>
+</template>

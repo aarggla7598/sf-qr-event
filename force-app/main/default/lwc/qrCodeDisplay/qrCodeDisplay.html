@@ -1,0 +1,9 @@
+<template>
+  <div class="qr-container">
+    <template lwc:if={title}>
+      <p class="slds-text-heading_small slds-m-bottom_x-small">{title}</p>
+    </template>
+    <div lwc:ref="qrCanvas" class="qr-canvas"></div>
+    <p class="slds-text-body_small slds-m-top_x-small qr-value">{value}</p>
+  </div>
+</template>

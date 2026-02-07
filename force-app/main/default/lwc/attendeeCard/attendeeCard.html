@@ -1,0 +1,68 @@
+<template>
+  <lightning-card>
+    <div class="slds-p-around_small">
+      <div
+        class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-m-bottom_x-small"
+      >
+        <div class="slds-col">
+          <h3 class="slds-text-heading_small">{attendee.Name}</h3>
+          <div class="slds-text-body_small slds-m-top_xx-small">
+            <lightning-icon
+              icon-name="utility:email"
+              size="xx-small"
+              class="slds-m-right_xx-small"
+            ></lightning-icon>
+            <span>{attendee.Email__c}</span>
+          </div>
+        </div>
+        <div class="slds-col_bump-left">
+          <lightning-badge
+            label={checkInStatusLabel}
+            class={checkInBadgeClass}
+          ></lightning-badge>
+        </div>
+      </div>
+
+      <template lwc:if={attendee.Checked_In__c}>
+        <p class="slds-text-body_small slds-m-bottom_x-small check-in-time">
+          <lightning-icon
+            icon-name="utility:clock"
+            size="xx-small"
+            class="slds-m-right_xx-small"
+          ></lightning-icon>
+          Checked in: {formattedCheckInTime}
+        </p>
+      </template>
+
+      <template lwc:if={showQR}>
+        <div class="slds-m-vertical_x-small">
+          <c-qr-code-display
+            value={attendee.QR_Code__c}
+            size="150"
+          ></c-qr-code-display>
+        </div>
+      </template>
+
+      <div class="slds-grid slds-grid_align-spread slds-m-top_x-small">
+        <lightning-button
+          variant={checkInButtonVariant}
+          label={checkInButtonLabel}
+          icon-name={checkInIcon}
+          onclick={handleToggleCheckIn}
+        ></lightning-button>
+        <lightning-button-group>
+          <lightning-button
+            label="Edit"
+            icon-name="utility:edit"
+            onclick={handleEdit}
+          ></lightning-button>
+          <lightning-button
+            label="Delete"
+            icon-name="utility:delete"
+            onclick={handleDelete}
+          ></lightning-button>
+        </lightning-button-group>
+      </div>
+    </div>
+  </lightning-card>
+</template>

@@ -1,0 +1,9 @@
+.checked-in-badge {
+  --sds-c-badge-color-background: #2e844a;
+  --sds-c-badge-text-color: white;
+}
+
+.scan-box {
+  background-color: #f3f3f3;
+  border-color: #0176d3;
+}
