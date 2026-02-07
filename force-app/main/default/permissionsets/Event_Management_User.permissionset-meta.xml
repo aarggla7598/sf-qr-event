@@ -30,27 +30,12 @@
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <fieldPermissions>
-        <field>Event__c.Date__c</field>
-        <editable>true</editable>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
         <field>Event__c.Description__c</field>
         <editable>true</editable>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>Event__c.Location__c</field>
-        <editable>true</editable>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
         <field>Event__c.Status__c</field>
-        <editable>true</editable>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <field>Attendee__c.Email__c</field>
         <editable>true</editable>
         <readable>true</readable>
     </fieldPermissions>
